@@ -11,6 +11,7 @@ import org.thymeleaf.spring6.SpringTemplateEngine;
 import org.thymeleaf.spring6.expression.ThymeleafEvaluationContext;
 
 import java.util.HashMap;
+import java.util.Map;
 
 @Aspect
 @Component
@@ -23,7 +24,7 @@ public class ViewComponentAspect {
     @Around("execution(* render()) || execution(* render(*))")
     Object renderViewComponent(ProceedingJoinPoint joinPoint) throws Throwable {
 
-        HashMap<String, Object> contextMap =  getJoinPointCast(joinPoint.proceed());
+        HashMap<String, Object> contextMap = new HashMap<String,Object>((Map<? extends String, ?>) joinPoint.proceed());
         Context htmlContext = new Context();
         htmlContext.setVariables(contextMap);
         htmlContext.setVariable(
@@ -37,9 +38,6 @@ public class ViewComponentAspect {
                 htmlContext
         );
 
-    }
-    private <T> HashMap<String, Object> getJoinPointCast(Object joinPointReturn){
-        return ((HashMap<String,Object>) joinPointReturn);
     }
 
 }
